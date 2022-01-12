@@ -21,6 +21,8 @@
     "rules": {
         "prettier/prettier": "error",
         "class-methods-use-this": "off", // disable this. in classes
+        "react/jsx-props-no-spreading": "off",
+        "react/prop-types": "off",
         "@typescript-eslint/camelcase": "off",
 
         "react-hooks/rules-of-hooks": "error",
