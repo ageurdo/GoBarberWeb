@@ -9,11 +9,20 @@ import { Container, Content, Background } from './styles';
 import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import { useAuth } from '../../hooks/auth';
+
+interface SignInFormData {
+    email: string;
+    password: string;
+}
 
 const Signin: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
+
+    const { signIn } = useAuth();
+
     const handleOnSubmit = useCallback(
-        async (data: Record<string, unknown>) => {
+        async (data: SignInFormData) => {
             try {
                 formRef.current?.setErrors({});
                 const schema = Yup.object().shape({
@@ -23,14 +32,19 @@ const Signin: React.FC = () => {
                 await schema.validate(data, {
                     abortEarly: false,
                 });
+                signIn({
+                    email: data.email,
+                    password: data.password,
+                });
             } catch (err) {
                 if (err instanceof Yup.ValidationError) {
                     const errors = getValidationErrors(err);
                     formRef.current?.setErrors(errors);
                 }
+                // dispara um toast
             }
         },
-        [],
+        [signIn],
     );
     return (
         <Container>
