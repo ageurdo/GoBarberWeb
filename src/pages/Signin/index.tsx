@@ -10,6 +10,7 @@ import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 interface SignInFormData {
     email: string;
@@ -20,6 +21,7 @@ const Signin: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
     const { signIn } = useAuth();
+    const { addToast } = useToast();
 
     const handleOnSubmit = useCallback(
         async (data: SignInFormData) => {
@@ -32,7 +34,7 @@ const Signin: React.FC = () => {
                 await schema.validate(data, {
                     abortEarly: false,
                 });
-                signIn({
+                await signIn({
                     email: data.email,
                     password: data.password,
                 });
@@ -41,7 +43,12 @@ const Signin: React.FC = () => {
                     const errors = getValidationErrors(err);
                     formRef.current?.setErrors(errors);
                 }
-                // dispara um toast
+                addToast({
+                    type: 'error',
+                    title: 'Erro na autenticação',
+                    description:
+                        'Ocorreu um erro ao fazer login, cheque as credenciais.',
+                });
             }
         },
         [signIn],
