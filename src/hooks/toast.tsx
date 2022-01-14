@@ -12,7 +12,7 @@ export interface ToastMessage {
 
 interface ToastContextData {
     addToast(message: Omit<ToastMessage, 'id'>): void;
-    removeToast(): void;
+    removeToast(id: string): void;
 }
 
 const ToastContext = createContext<ToastContextData>({} as ToastContextData);
@@ -33,8 +33,8 @@ const ToastProvider: React.FC = ({ children }) => {
         },
         [],
     );
-    const removeToast = useCallback(() => {
-        console.log('RemoveToast');
+    const removeToast = useCallback((id: string) => {
+        setMessages(old => old.filter(message => message.id !== id));
     }, []);
 
     return (
@@ -54,5 +54,9 @@ function useToast(): ToastContextData {
 
     return context;
 }
+
+// function removeToast(id: string): void {
+//     throw new Error('Function not implemented.');
+// }
 
 export { ToastProvider, useToast };
